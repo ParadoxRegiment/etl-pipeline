@@ -1,0 +1,27 @@
+# Warehouse Postgres only, for now.
+#
+# This is the database our earthquake data lands in — deliberately SEPARATE
+# from the Postgres that Airflow uses for its own metadata (added in the
+# orchestration step). Keeping them apart means Airflow's internal churn never
+# touches our analytical data, and either can be reset independently.
+services:
+  warehouse:
+    image: postgres:16
+    container_name: etl_warehouse
+    environment:
+      POSTGRES_USER: ${WAREHOUSE_DB_USER}
+      POSTGRES_PASSWORD: ${WAREHOUSE_DB_PASSWORD}
+      POSTGRES_DB: ${WAREHOUSE_DB_NAME}
+    ports:
+      # host:container — override host port via .env if 5432 is taken locally
+      - "${WAREHOUSE_DB_PORT:-5432}:5432"
+    volumes:
+      - warehouse_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${WAREHOUSE_DB_USER} -d ${WAREHOUSE_DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  warehouse_data:

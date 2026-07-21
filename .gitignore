@@ -216,3 +216,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Cached raw API responses (keep the dir, ignore its contents)
+/data/raw/*
+!/data/raw/.gitkeep

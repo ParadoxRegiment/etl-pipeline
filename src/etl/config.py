@@ -15,6 +15,9 @@ import pathlib
 BASE_DIR = pathlib.Path(__file__).resolve().parents[2]
 RAW_DIR = BASE_DIR / "data" / "raw"
 
+# The whole "database" is just this one file on disk (SQLite). No server.
+DB_PATH = BASE_DIR / "data" / "earthquakes.db"
+
 # TODO (pair): define a Settings object that reads:
 #   - warehouse DB connection (user/password/host/port/name -> SQLAlchemy URL)
 #   - USGS API base URL (default https://earthquake.usgs.gov/fdsnws/event/1/query)

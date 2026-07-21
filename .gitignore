@@ -220,3 +220,6 @@ __marimo__/
 # Cached raw API responses (keep the dir, ignore its contents)
 /data/raw/*
 !/data/raw/.gitkeep
+
+# Local SQLite database
+/data/*.db

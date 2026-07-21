@@ -1,20 +1,16 @@
 [project]
 name = "etl-pipeline"
 version = "0.1.0"
-description = "USGS earthquake ETL pipeline: extract -> transform -> load into Postgres, orchestrated with Airflow."
+description = "USGS earthquake ETL pipeline: extract -> transform -> load into a local SQLite database."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "requests>=2.32",
-    "tenacity>=9.0",        # retry/backoff for the extract client (swap for urllib3 Retry if preferred)
+    "tenacity>=9.0",   # retry/backoff for the extract client (added later)
     "pandas>=2.2",
-    "sqlalchemy>=2.0",
-    "psycopg[binary]>=3.2", # psycopg 3 -> URL scheme is postgresql+psycopg://
-    "python-dotenv>=1.0",   # load .env in local dev
 ]
 
 [dependency-groups]
-# uv-native dev dependency group (installed by `uv sync`, excluded from the built package)
 dev = [
     "pytest>=8.3",
     "ruff>=0.6",
@@ -32,7 +28,6 @@ line-length = 100
 target-version = "py311"
 
 [tool.ruff.lint]
-# start lean; tighten as the project grows
 select = ["E", "F", "I", "UP", "B"]
 
 [tool.pytest.ini_options]

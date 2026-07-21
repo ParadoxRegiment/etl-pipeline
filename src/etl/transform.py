@@ -1,27 +1,32 @@
-"""Transform layer: GeoJSON FeatureCollection -> tidy, typed DataFrame(s).
+"""Transform layer: turn the raw GeoJSON into a clean, FLAT table of events.
 
-Each GeoJSON feature looks like:
+Input:  the GeoJSON dict from extract (a "FeatureCollection").
+Output: a pandas DataFrame with ONE ROW PER EARTHQUAKE and one column per
+        field we care about -- exactly the shape that drops straight into a
+        single SQLite table in load.py.
+
+Each feature looks like:
     {
       "id": "us7000abcd",
       "properties": {"mag": 4.2, "place": "...", "time": 1690000000000,
-                     "type": "earthquake", "magType": "mb", ...},
+                     "magType": "mb", "type": "earthquake", ...},
       "geometry": {"type": "Point", "coordinates": [lon, lat, depth_km]}
     }
 
-Responsibilities (pairing target):
-  - Flatten properties + geometry into columns.
-  - Coerce types (epoch-millis -> UTC timestamp; numeric mag/depth).
-  - Deduplicate on the event id.
-  - Handle missing values sensibly (mag can be null, place can be null).
-  - Shape the output to match the star schema we design in models.py.
+The real work (pairing target):
+  - Pull each feature's `id`, its `properties`, and its `geometry.coordinates`
+    into flat columns.
+  - Split coordinates -> longitude, latitude, depth  (remember: LON is first).
+  - Convert `time` / `updated` from epoch-milliseconds to real timestamps.
+  - Decide what to do with missing values (mag, felt, cdi, mmi are often null).
+  - Drop duplicate ids if any slipped in.
 """
 
 from __future__ import annotations
 
+import pandas as pd
 
-def transform_events():
-    """Turn raw GeoJSON into the DataFrame(s) the load layer expects.
 
-    Parameters/return shape left open until we've designed the schema.
-    """
+def transform_events(geojson: dict) -> pd.DataFrame:
+    """Flatten a USGS GeoJSON FeatureCollection into a tidy DataFrame."""
     raise NotImplementedError("pair-programming target")

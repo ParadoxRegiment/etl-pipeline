@@ -17,7 +17,7 @@ Responsibilities (what we'll build together):
 
 from __future__ import annotations
 import requests
-
+import pathlib
 
 def fetch_events(starttime, endtime, *, min_magnitude=None, session:requests.Session | None=None):
     """Fetch a window of earthquake events from USGS and return raw GeoJSON.
@@ -40,10 +40,16 @@ def fetch_events(starttime, endtime, *, min_magnitude=None, session:requests.Ses
     resp = client.get(url_template, params=url_params, timeout=(5, 30))
     
     resp.raise_for_status()
-    events_data = resp.json()
+    data_dump = resp.text
+    # events_json = resp.json()
+    dump_file_name = f"data/raw/usgs_{starttime}_{endtime}_m{min_magnitude}.json"
+    dump_path = pathlib.Path(dump_file_name)
     
-    print(events_data)
-    return events_data
+    dump_path.parent.mkdir(parents=True, exist_ok=True)
+    dump_path.write_text(data_dump, encoding="utf-8")
+    
+    # print(events_data)
+    return data_dump
 
 if __name__ == "__main__":
     fetch_events("2014-01-01", "2014-01-02")

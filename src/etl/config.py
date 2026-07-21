@@ -10,6 +10,10 @@ We'll fill this in together. Open questions to decide when we do:
 """
 
 from __future__ import annotations
+import pathlib
+
+BASE_DIR = pathlib.Path(__file__).resolve().parents[2]
+RAW_DIR = BASE_DIR / "data" / "raw"
 
 # TODO (pair): define a Settings object that reads:
 #   - warehouse DB connection (user/password/host/port/name -> SQLAlchemy URL)
